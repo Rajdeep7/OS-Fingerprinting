@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Os-fingerprinting by Rajdeep7</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Os-fingerprinting</h1>
+        <h2>OS Fingerprinting - A Network Security Project </h2>
+        <a href="https://github.com/Rajdeep7/OS-Fingerprinting" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="os-fingerprinting" class="anchor" href="#os-fingerprinting" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>OS-Fingerprinting</h1>
+
+<h1></h1>
+
+<h2>
+<a id="objectives" class="anchor" href="#objectives" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Objectives</h2>
+
+<hr>
+
+<ul>
+<li>Develop an OS fingerprinting tool</li>
+<li>Develop a tool that detects OS fingerprinting</li>
+</ul>
+
+<h2>
+<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Requirements</h2>
+
+<hr>
+
+<ul>
+<li>The tools can be developed under the OS of your choice.</li>
+<li>OS fingerprinting can be done using any combination of techniques.</li>
+<li>Use any approach that might help you avoid detection.</li>
+<li>Give a list of potential OS running on your opponent’s machine with a justification.</li>
+<li>IP address of the source of the attack.</li>
+<li>Your detection tool must not mistake legitimate traffic as a fingerprinting attempt.</li>
+<li>Your host must be running a web server on port 80. Extra credit if you identify the web server used by your opponent with a justification.</li>
+</ul>
+
+<h2>
+<a id="attack-tool" class="anchor" href="#attack-tool" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Attack Tool</h2>
+
+<hr>
+
+<p>Each Operating System (OS) has unique characteristics in its TCP/IP stack implementation that may serve to identify it on a network. There is a wide range of techniques and methods that helped us get a good estimate of the operating system running on a certain remote machine.</p>
+
+<p>One approach is to use active fingerprinting. That is, special “probe” packets are sent to a certain machine, and based on its response, a certain OS is assumed.</p>
+
+<p>Another approach is to use passive fingerprinting (as used in our project), where legitimate traffic is analyzed and compared for certain key differences in the TCP/IP stack implementation on different versions and types of operating systems.</p>
+
+<p>This tool sends a legitimate HTTP request to the victim’s web server, and based on the response packets, different tests are applied to determine the installed OS and web server.</p>
+
+<p>A total of ten techniques are used to filter out a final choice from 24 OS Versions. These techniques have different weight values based on their accuracy.</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">Technique</th>
+<th align="left">Description</th>
+<th align="center">Weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><strong>TTL</strong></td>
+<td align="left">Test the initial TTL value used by the OS</td>
+<td align="center">0.5</td>
+</tr>
+<tr>
+<td align="center"><strong>DF</strong></td>
+<td align="left">Some OSes set the DF bit in the IP header while others don’t</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center"><strong>IP ID</strong></td>
+<td align="left">Different IPIDs may be sent in the IP header</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center"><strong>Window Size</strong></td>
+<td align="left">Differentiate implementations based on default Window Size in TCP</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center"><strong>SYN Packet Size</strong></td>
+<td align="left">May differ between different OSes</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center"><strong>Window Scale Option (TCP)</strong></td>
+<td align="left">Not all OSes implementation use this option</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center"><strong>TCP Options Order</strong></td>
+<td align="left">The order of TCP options may vary from one system to another</td>
+<td align="center">2.5</td>
+</tr>
+<tr>
+<td align="center"><strong>ACK Flag</strong></td>
+<td align="left">Differentiate OSes based on the value of the Acknowledgment Number field in the TCP header when the ACK flag is set to zero</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center"><strong>URG flag</strong></td>
+<td align="left">Differentiate OSes based on the value of the Urgent Pointer field in the TCP header when the URG flag is set to zero</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center"><strong>Banner Grabbing</strong></td>
+<td align="left">The HTTP reply from the web server may contain valuable information revealing the web server name and version as well as the OS name in some cases</td>
+<td align="center"></td>
+</tr>
+</tbody>
+</table>
+
+<p>You can run the attack tool by issuing the following command:</p>
+
+<blockquote>
+<p>./ofp_tool victim_ip</p>
+</blockquote>
+
+<h2>
+<a id="references" class="anchor" href="#references" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>References</h2>
+
+<hr>
+
+<p>Imad Elhajj, American University of Beirut, <a href="http://staff.aub.edu.lb/~ie05/">More</a>.</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/Rajdeep7/OS-Fingerprinting/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/Rajdeep7/OS-Fingerprinting/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/Rajdeep7/OS-Fingerprinting"></a> is maintained by <a href="https://github.com/Rajdeep7">Rajdeep7</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
